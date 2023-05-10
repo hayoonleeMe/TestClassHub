@@ -1,0 +1,89 @@
+﻿@using ClassHub.Shared
+@using System.Linq
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+@inject NavMenuTitleService NavMenuTitleService
+
+<style>
+    .timetable td, .timetable th {
+        width: 14.2857%; /* 100% / 7 (시간 + 5개의 평일 요일) */
+        height: 50px; /* 원하는 높이로 설정하세요. */
+        text-align: center; /* 가운데 정렬 */
+        vertical-align: middle; /* 수직 가운데 정렬 */
+    }
+
+    .timetable th {
+        background-color: ghostwhite;
+    }
+</style>
+
+@if(Sections == null) {
+    <p><em>Loading...</em></p>
+} else {
+    <table class="table table-bordered timetable">
+        <thead>
+            <tr>
+                <th>Time</th>
+                @foreach(var dayOfWeek in Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>().Where(d => d != DayOfWeek.Saturday && d != DayOfWeek.Sunday)) {
+                    <th>@dayOfWeek.ToString().Substring(0, 3)</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for(int hour = StartHour; hour <= EndHour; hour++) {
+                <tr>
+                    <td>@hour:00<br />(@((hour - StartHour + 1) + "교시"))</td>
+                    @foreach(var dayOfWeek in Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>().Where(d => d != DayOfWeek.Saturday && d != DayOfWeek.Sunday)) {
+                        bool flag = true;
+                        @foreach(var course in Sections.Where(c => c.Day == dayOfWeek && c.StartTime <= hour && hour < c.EndTime)) {
+                            if(course.StartTime != hour) {
+                                flag = false;
+                                break;
+                            }
+                            int span = course.EndTime - course.StartTime;
+                            <td rowspan=@span>
+                                <button class="btn btn-@colors[course.Color] btn-sm w-100 h-100" @onclick="() => CourseSelected(course)">
+                                    @course.Name
+                                    <br />
+                                    @course.Instructor
+                                    <br />
+                                    @course.BuildingId
+                                </button>
+                            </td>
+                            flag = false;
+                            break;
+                        }
+                        if(flag) {
+                            <td />
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public List<Section> Sections { get; set; }
+
+    private string[] colors = { "primary", "secondary", "success", "danger", "warning", "info", "light", "dark" };
+
+    // 시간표 시작 시간과 종료 시간을 설정하세요.
+    private int StartHour => 9;
+    private int EndHour => 19;
+
+    private void CourseSelected(Section section) {
+        // 해당 강의를 선택했을 때 수행할 작업을 정의하세요.
+        Console.WriteLine($"Selected course: {section.Name}");
+        //NavigationManager.NavigateTo($"/classroom/{course.Id}");
+        NavMenuTitleService.Title = $"{section.Name}({section.SectionId.ToString("D4")})";
+        NavigationManager.NavigateTo($"/classroom/1");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if(firstRender) {
+            await JSRuntime.InvokeVoidAsync("setUniformRowHeight");
+        }
+    }
+}

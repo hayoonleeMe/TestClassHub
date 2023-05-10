@@ -1,0 +1,17 @@
+﻿@page "/classroom/{roomid:int}/attendance"
+@layout MainLayout
+@using ClassHub.Client.Models
+
+<h3>출석 현황</h3>
+<br />
+<AttendanceStatusVertical roomId="@RoomId"/>
+
+@code {
+    [Parameter]
+    public int RoomId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+}
