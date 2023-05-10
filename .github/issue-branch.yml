@@ -1,4 +1,0 @@
-defaultBranch: 'release'
-autoCloseIssue: true
-openDraftPR: true
-branchName: full
