@@ -14,6 +14,37 @@ namespace ClassHub.Server.Controllers
         [ApiController]
         public class JudgeController : ControllerBase
         {
+            [HttpGet]
+            public async Task<IActionResult> Get() {
+                HttpClient http = new HttpClient();
+                var response = await http.GetAsync("https://20.196.210.96:7135/Judge");
+
+                if (response.IsSuccessStatusCode) {
+
+                    Console.WriteLine("Data posted successfully");
+
+                    JudgeResult? judgeResult = await response.Content.ReadFromJsonAsync<JudgeResult>();
+
+                    // Valid response
+
+                    if (judgeResult != null) {
+                        return Ok(judgeResult);
+                    }
+                    // Invalid response
+                    else {
+                        // TODO : JudgeServer로 보낸 Post 요청이 실패했을 때 처리
+                        Console.WriteLine("Invalid response");
+                        return BadRequest("JudgeServer와 통신 실패");
+                    }
+                }
+                // Post 요청 실패
+                else {
+                    Console.WriteLine("Failed to post data " + response.StatusCode);
+                    // TODO : JudgeServer로 보낸 Post 요청이 실패했을 때 처리
+                    return BadRequest("JudgeServer와 통신 실패");
+                }
+            }
+
             // POST <JudgeController>
             [HttpPost]
             public async Task<IActionResult> Post([FromBody] JudgeRequest request)
