@@ -22,8 +22,8 @@ namespace ClassHub.Server.Controllers
                 // 채점 서버에 채점 요청
                 HttpClient Http = new HttpClient();
                 var content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
-                //var response = await Http.PostAsync("https://20.196.210.96:8080/Judge", content);
-                var response = await Http.PostAsync("http://10.0.0.4:7135/Judge", content);
+                var response = await Http.PostAsync("http://20.196.210.96:7135/Judge", content);
+                //var response = await Http.PostAsync("http://10.0.0.4:7135/Judge", content);
 
                 // Post 요청 및 응답 받기 성공
 
