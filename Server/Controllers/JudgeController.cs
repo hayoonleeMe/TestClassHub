@@ -23,7 +23,7 @@ namespace ClassHub.Server.Controllers
                 HttpClient Http = new HttpClient();
                 var content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
                 //var response = await Http.PostAsync("http://20.196.210.96:7135/Judge", content);
-                var response = await Http.PostAsync("http://10.0.0.4:7135/Judge", content);
+                var response = await Http.PostAsync("http://10.0.0.4:5000/Judge", content);
 
                 // Post 요청 및 응답 받기 성공
 
