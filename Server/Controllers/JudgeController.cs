@@ -20,21 +20,12 @@ namespace ClassHub.Server.Controllers
                 var response = await http.GetAsync("https://20.196.210.96:7135/Judge");
 
                 if (response.IsSuccessStatusCode) {
-
-                    Console.WriteLine("Data posted successfully");
-
-                    JudgeResult? judgeResult = await response.Content.ReadFromJsonAsync<JudgeResult>();
-
-                    // Valid response
-
-                    if (judgeResult != null) {
-                        return Ok(judgeResult);
-                    }
-                    // Invalid response
-                    else {
-                        // TODO : JudgeServer로 보낸 Post 요청이 실패했을 때 처리
-                        Console.WriteLine("Invalid response");
-                        return BadRequest("JudgeServer와 통신 실패");
+                    string? result = await response.Content.ReadFromJsonAsync<string>();
+                    if (result != null) {
+                        Console.WriteLine(result);
+                        return Ok(result);
+                    } else {
+                        return BadRequest();
                     }
                 }
                 // Post 요청 실패
