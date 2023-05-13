@@ -148,7 +148,7 @@
             };
         
         //하나로 묶어준다.
-        Tuple<JudgeRequest, CodeSubmit> requestTuple = new Tuple<JudgeRequest, CodeSubmit>(requestJudge,requestSubmit);
+        ValueTuple<JudgeRequest, CodeSubmit> requestTuple = new ValueTuple<JudgeRequest, CodeSubmit>(requestJudge,requestSubmit);
         // 직렬화
         var content = new StringContent(JsonSerializer.Serialize(requestTuple), Encoding.UTF8, "application/json");
 
