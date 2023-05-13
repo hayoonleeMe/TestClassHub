@@ -127,7 +127,8 @@
             await base.OnAfterRenderAsync(firstRender);
 
             connection = new HubConnectionBuilder()
-             .WithUrl("https://localhost:7182/realtimesubmithub")
+             //.WithUrl("https://localhost:7182/realtimesubmithub")
+             .WithUrl("https://testclasshub.azurewebsites.net/realtimesubmithub")
              .Build();
 
             await connection.StartAsync();

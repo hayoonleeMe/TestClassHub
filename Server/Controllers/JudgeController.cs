@@ -24,14 +24,16 @@ namespace ClassHub.Server.Controllers
                 // 채점중인 레코드를 insert 
                 using var httpClient = new HttpClient();
                 var contentSubmit = new StringContent(JsonSerializer.Serialize(submitData), Encoding.UTF8, "application/json");
-                var responseSubmit = await httpClient.PostAsync("https://localhost:7182/api/CodeSubmit/insert", contentSubmit);
+                //var responseSubmit = await httpClient.PostAsync("https://localhost:7182/api/CodeSubmit/insert", contentSubmit);
+                var responseSubmit = await httpClient.PostAsync("https://testclasshub.azurewebsites.net/api/CodeSubmit/insert", contentSubmit);
 
                 int submitId = await responseSubmit.Content.ReadFromJsonAsync<int>();
 
                 // 채점 서버에 채점 요청
                 judgeData.SubmitId = submitId;
                 var contentJudge = new StringContent(JsonSerializer.Serialize(judgeData), Encoding.UTF8, "application/json");
-                var responseJudge = await httpClient.PostAsync("https://localhost:7135/Judge", contentJudge);
+                //var responseJudge = await httpClient.PostAsync("https://localhost:7135/Judge", contentJudge);
+                var responseJudge = await httpClient.PostAsync("https://20.196.210.96:7135/Judge", contentJudge);
 
                 // Post 요청 및 응답 받기 성공
                 if (responseJudge.IsSuccessStatusCode){
@@ -45,7 +47,8 @@ namespace ClassHub.Server.Controllers
                         Tuple<JudgeResult, int> result = new Tuple<JudgeResult, int>(judgeResult, submitId);
                         //채점 완료 후 db 업데이트 요청
                         var contentResult = new StringContent(JsonSerializer.Serialize(result), Encoding.UTF8, "application/json");
-                        await httpClient.PutAsync("https://localhost:7182/api/CodeSubmit/update", contentResult);
+                        //await httpClient.PutAsync("https://localhost:7182/api/CodeSubmit/update", contentResult);
+                        await httpClient.PutAsync("https://testclasshub.azurewebsites.net/api/CodeSubmit/update", contentResult);
                         return Ok(judgeResult);
                     }
                     // Invalid response
