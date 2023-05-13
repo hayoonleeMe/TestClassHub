@@ -16,7 +16,7 @@ namespace ClassHub.Server.Controllers
         {
        
             [HttpPost]
-            public async Task<IActionResult> Post([FromBody] ValueTuple<JudgeRequest, CodeSubmit> request){
+            public async Task<IActionResult> Post([FromBody] Tuple<JudgeRequest, CodeSubmit> request){
                 //튜플에서 데이터 분리
                 var judgeData = request.Item1;
                 var submitData = request.Item2;
