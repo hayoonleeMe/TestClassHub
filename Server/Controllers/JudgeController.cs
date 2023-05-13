@@ -32,8 +32,8 @@ namespace ClassHub.Server.Controllers
                 // 채점 서버에 채점 요청
                 judgeData.SubmitId = submitId;
                 var contentJudge = new StringContent(JsonSerializer.Serialize(judgeData), Encoding.UTF8, "application/json");
-                //var responseJudge = await httpClient.PostAsync("https://localhost:7135/Judge", contentJudge);
-                var responseJudge = await httpClient.PostAsync("https://20.196.210.96:7135/Judge", contentJudge);
+                //var responseJudge = await httpClient.PostAsync("http://localhost:5000/Judge", contentJudge);
+                var responseJudge = await httpClient.PostAsync("http://20.196.210.96:5000/Judge", contentJudge);
 
                 // Post 요청 및 응답 받기 성공
                 if (responseJudge.IsSuccessStatusCode){
