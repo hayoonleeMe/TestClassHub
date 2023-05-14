@@ -3,6 +3,7 @@
 @layout MainLayout
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
+@inject IJSRuntime JSRuntime
 @using ClassHub.Client.Models;
 @using ClassHub.Shared;
 @using System.Text.RegularExpressions;
@@ -232,9 +233,15 @@
 	}
 
 	private async void Delete() {
-		string requestUri = requestUri = $"/api/classroom/{RoomId}/delete/{type.ToString().ToLower()}/{ContentId}";
-		await Http.DeleteAsync(requestUri);
-		NavigationManager.NavigateTo(NavigationManager.Uri.Substring(0, NavigationManager.Uri.LastIndexOf("/")));
+
+		bool confirmed = await JSRuntime.InvokeAsync<bool>("showConfirm", "게시글을 삭제하시겠습니까?", "삭제 후에는 복구할 수 없습니다.","삭제");
+
+		if (confirmed) {
+			string requestUri = requestUri = $"/api/classroom/{RoomId}/delete/{type.ToString().ToLower()}/{ContentId}";
+			await Http.DeleteAsync(requestUri);
+			NavigationManager.NavigateTo(NavigationManager.Uri.Substring(0, NavigationManager.Uri.LastIndexOf("/")));
+		}
+		
 	}
 
 	/// <summary>
